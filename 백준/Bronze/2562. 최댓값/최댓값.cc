@@ -24,4 +24,4 @@ int main()
     }
 
     cout << maxNum << endl << index;
-}   
+}

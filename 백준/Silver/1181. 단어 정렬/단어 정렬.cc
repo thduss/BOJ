@@ -1,37 +1,33 @@
-#include <iostream>
+#include<iostream>
+#include <vector>
 #include <algorithm>
-#include <string.h>
+#include <string>
 using namespace std;
 
-bool compare (string a, string b){
-	if (a.length() < b.length()) {
-		return 1;
-	}
-	else if (b.length() < a.length()) {
-		return 0;
-	}
-	else {
-		return a < b;
-	}
+bool compare(pair<string,int> a, pair<string,int> b){
+    if(a.second != b.second){
+        return a.second < b.second;
+    }
+    else{
+        return a.first < b.first;
+    }
 }
-int main(){
-    ios_base::sync_with_stdio(0);
-	cin.tie(0);
 
-    int N;
-    cin >> N;
-    
-    string arr[100000];
-    for(int i=0; i<N; i++){
-        cin >> arr[i];
+int main() {
+    int n;
+    cin >> n;
+
+    vector<pair<string, int>> arr;
+    for(int i=0; i<n; i++){
+        string a;
+        cin >> a;
+        arr.push_back({a, a.length()});
     }
 
-    sort(arr, arr+N, compare);
+    sort(arr.begin(), arr.end(), compare);
 
-    for(int i=0; i<N; i++){
-        if (i > 0 && arr[i] == arr[i - 1]) continue;
-        cout << arr[i] << "\n";
+    for(int i=0; i<n; i++){
+        if(arr[i] != arr[i+1])
+            cout <<  arr[i].first << "\n";
     }
-    return 0;
-
-}
+}   

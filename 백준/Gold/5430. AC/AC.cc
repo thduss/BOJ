@@ -1,69 +1,80 @@
 #include <iostream>
-#include <deque>
+#include <stack>
+
 using namespace std;
 
-int main(){
-    int T; // testCase
-    deque<int> q;
-    
-    cin >> T;
-    while(T--){
-        string op, arr;
-        int n; // arrNum;
-        cin >> op >> n >> arr;
+void R(bool& is_reverse){
+    is_reverse = !is_reverse;
+}
+bool D(deque<int>& dq, bool& is_reverse){
+    if(!dq.empty()){
+        if(is_reverse){
+            dq.pop_back();
+        }else{
+            dq.pop_front();
+        }
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
-        //arrNum 만들기
+int main(){
+    int t;
+    cin >> t;
+
+    while(t--){
+        string command, list;
+        int n;
+        cin >> command >> n >> list;
+
+        deque<int> dq;
+
         string tmp;
-        for(int i = 0; i< arr.length(); i++){
-            if(arr[i]=='[') continue;
-            else if('0'<= arr[i] && '9' >= arr[i]) tmp += arr[i];
-            else if(arr[i] == ',' || arr[i] == ']'){
+        for(char ch : list){
+            if(isdigit(ch)){
+                tmp += ch;
+            }
+            else if (ch == ',' || ch == ']') {
                 if(!tmp.empty()){
-                    q.push_back(stoi(tmp));
+                    dq.push_back(stoi(tmp));
                     tmp.clear();
                 }
             }
         }
-        //op 수행하기
-        bool left = true; // 뒤집혀있지 않으면 true
-        bool print = true; // error 아닐때 true
-        for(int i=0; i<op.length(); i++){
-            if(op[i] == 'R'){
-                left = !left;
-            }
-            else{
-                if(q.empty()){
-                    print = false;
+
+        bool flag = false, is_reverse= false;
+        for(int i=0; i<command.size(); i++){
+            if(command[i] == 'R'){
+                R(is_reverse);
+            }else{
+                if(!D(dq, is_reverse)){
                     cout << "error\n";
+                    flag = true;
                     break;
                 }
-                else {
-                    if(left == true) q.pop_front();
-                    else q.pop_back();
-                }
             }
         }
-        //출력
-        if(print == true){
-            if(left == true){
-                cout<< "[";
-                while(!q.empty()){
-                    cout << q.front();
-                    q.pop_front();
-                    if(!q.empty()) cout << ",";                    
+        if(!flag){
+            int cnt = dq.size();
+            cout << "[";
+            if(!is_reverse){
+                for(int i = 0; i < cnt; i++){
+                    cout << dq.front();
+                    dq.pop_front();
+                    if (i != cnt - 1) cout << ",";
                 }
-                cout << "]\n";
             }
             else{
-            cout<< "[";                       
-            while(!q.empty()){
-                cout << q.back();
-                q.pop_back();
-                    if(!q.empty()) cout << ",";
+                for(int i = 0; i < cnt; i++){
+                    cout << dq.back();
+                    dq.pop_back();
+                    if (i != cnt - 1) cout << ",";
                 }
-                cout << "]\n";
             }
+            cout << "]\n";
         }
     }
-    return 0;
+
 }

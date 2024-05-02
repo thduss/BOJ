@@ -1,25 +1,32 @@
 #include <iostream>
+#include <string>
+#include <cstdio>
 #include <stack>
+
 using namespace std;
 
 int main(){
-    int N, An, ans[10000000];
-    stack<int> s;
-    cin >> N;
-    int arr[N];
-    for(int i = 0; i<N;i++) cin >> arr[i];
+    int n;
+    cin >> n;
 
-    //오큰수 구하기
-   for(int i = N-1; i>=0; i--){
-        while(!s.empty() && s.top() <= arr[i]){
-            s.pop();
+    int arr[n], ans[1000001]={0,};
+    for(int i=0; i<n; i++)
+        cin >> arr[i];
+
+    stack<int> st;
+    for(int i=0; i<n; i++){
+        while(!st.empty() && arr[st.top()] < arr[i]) {
+            ans[st.top()] = arr[i];
+            st.pop();
         }
-        if(s.empty()) ans[i]= -1;
-        else ans[i]= s.top();
-        
-        s.push(arr[i]);
+        st.push(i);
     }
-    for(int i=0; i<N; i++) cout << ans[i] << " ";
 
-    return 0;
+    while(!st.empty()){
+        ans[st.top()] = -1;
+        st.pop();
+    }
+
+    for(int i=0; i<n; i++)
+        cout << ans[i] << " ";
 }

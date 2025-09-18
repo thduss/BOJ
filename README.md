@@ -7,6 +7,7 @@
 ### 🚀 Bronze
 | 문제번호 | 링크 |
 | ----- | ----- |
+|1000. A＋B|[링크](./%EB%B0%B1%EC%A4%80/Bronze/1000.%E2%80%85A%EF%BC%8BB/README.md)|
 |10569. 다면체|[링크](./%EB%B0%B1%EC%A4%80/Bronze/10569.%E2%80%85%EB%8B%A4%EB%A9%B4%EC%B2%B4/README.md)|
 |10699. 오늘 날짜|[링크](./%EB%B0%B1%EC%A4%80/Bronze/10699.%E2%80%85%EC%98%A4%EB%8A%98%E2%80%85%EB%82%A0%EC%A7%9C/README.md)|
 |10870. 피보나치 수 5|[링크](./%EB%B0%B1%EC%A4%80/Bronze/10870.%E2%80%85%ED%94%BC%EB%B3%B4%EB%82%98%EC%B9%98%E2%80%85%EC%88%98%E2%80%855/README.md)|

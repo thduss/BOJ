@@ -1,27 +1,27 @@
+import java.util.*;
+
 class Solution {
-    static int[] sNumbers;
-    static int sTarget;
-    static int answer;
+    public static int cnt;
     
     public int solution(int[] numbers, int target) {
-        answer = 0;
+        int answer = 0;
         
-        sTarget = target;
-        sNumbers = numbers;
-        
-        dfs(0, 0);
+        cnt = 0;
+        dfs(0, 0, numbers, target);
+        answer = cnt;
         
         return answer;
     }
     
-    public void dfs(int sum, int idx){
-        if(idx>=sNumbers.length){
-            if(sum==sTarget) answer++;
+    public void dfs(int idx, int num, int[] numbers, int target){
+        if(idx>=numbers.length){
+            if(target==num){
+                cnt++;
+            }
             return;
         }
         
-        dfs(sum+sNumbers[idx], idx+1);
-        dfs(sum-sNumbers[idx], idx+1);
-        
+        dfs(idx+1, num+numbers[idx], numbers, target);
+        dfs(idx+1, num-numbers[idx], numbers, target);
     }
 }

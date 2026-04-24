@@ -2,14 +2,21 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
-        int[] answer = new int[commands.length];
+        List<Integer> list = new ArrayList<>();
         
-        for(int i=0; i<commands.length; i++){
-            int[] subarray = Arrays.copyOfRange(array, commands[i][0]-1, commands[i][1]);
-            Arrays.sort(subarray);
-            answer[i] = subarray[commands[i][2]-1];
+        for(int[] command : commands){
+            int start = command[0]-1;
+            int end = command[1]-1;
+            
+            int[] arr = new int[end-start+1];
+            int idx = 0;
+            for(int i=start; i<=end; i++){
+                arr[idx++] = array[i];
+            }
+            
+            Arrays.sort(arr);
+            list.add(arr[command[2]-1]);   
         }
-        
-        return answer;
+        return list.stream().mapToInt(i->i).toArray();
     }
 }

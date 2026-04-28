@@ -3,34 +3,33 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
         int[] answer = {};
-        
-        List<Integer> list = new LinkedList<>();
-        Stack<Integer> st = new Stack<>();
-        int cnt=0, idx=0;
-        
-        while(idx<speeds.length){
-            int workDay = (int) Math.ceil((100.0-progresses[idx])/speeds[idx]);
-        
-            cnt++;
-            idx++;
+
+        Stack<Integer> stack = new Stack<>();
+        List<Integer> list = new ArrayList<>();
+        int cnt=0;
+        for(int i=0; i<progresses.length; i++){
+            int day = (100-progresses[i])/speeds[i];
+            if(((100-progresses[i])%speeds[i])!=0) day+=1;
             
-            if(st.empty()){
-                st.add(workDay);
+            cnt++;
+            if(stack.empty()){
+                stack.push(day);
                 continue;
             }
-                
-            if(st.peek()<workDay){
-                st.pop();
+            
+            if(stack.peek()<day){
+                stack.pop();
                 list.add(cnt-1);
                 cnt=1;
-                st.add(workDay);
+                stack.add(day);
             }
+            
         }
         
-        if(!st.isEmpty()){
+        if(!stack.isEmpty()){
             list.add(cnt);
         }
-        
+
         answer = new int[list.size()];
         for(int i=0; i<list.size(); i++){
             answer[i] = list.get(i);

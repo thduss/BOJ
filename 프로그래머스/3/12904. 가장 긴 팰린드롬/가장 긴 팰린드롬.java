@@ -5,10 +5,10 @@ class Solution
     public int solution(String s)
     {
         int answer = 0;
-        
+
         for(int i=0; i<s.length(); i++){
             for(int j=i; j<s.length(); j++){
-                if(isPalindrome(i,j,s)){
+                if(palindrome(i, j, s)){
                     answer = Math.max(answer, j-i+1);
                 }
             }
@@ -17,11 +17,15 @@ class Solution
         return answer;
     }
     
-    boolean isPalindrome(int start, int end, String s){
-        while(start<end){
-            if(s.charAt(start++)!=s.charAt(end--)){
+    public static boolean palindrome(int f, int e, String s){
+        
+        while(f<=e){
+            if(s.charAt(f)!=s.charAt(e)){
                 return false;
             }
+            
+            f++;
+            e--;
         }
         
         return true;

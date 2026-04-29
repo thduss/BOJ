@@ -4,37 +4,35 @@ class Solution {
     public int[] solution(int[] answers) {
         int[] answer = {};
         
-        int[] arr1 = {1,2,3,4,5};
-        int[] arr2 = {2,1,2,3,2,4,2,5};
-        int[] arr3 = {3,3,1,1,2,2,4,4,5,5};
+        int[] one = {1,2,3,4,5};
+        int[] two = {2,1,2,3,2,4,2,5};
+        int[] three = {3,3,1,1,2,2,4,4,5,5};
         
-        int[] correct = new int[3];
+        int cnt1 = 0, cnt2 = 0, cnt3 = 0;
         for(int i=0; i<answers.length; i++){
-            int idx = i%5;
-            if(arr1[idx]==answers[i]) correct[0]++;
             
+            if(answers[i]==one[i%one.length]){
+                cnt1++;
+            }
             
-            idx = i%8;
-            if(arr2[idx]==answers[i]) correct[1]++;
+            if(answers[i]==two[i%two.length]){
+                cnt2++;
+            }
             
-            
-            idx = i%10;
-            if(arr3[idx]==answers[i]) correct[2]++;
-        }
-        
-        int maxNum=0;
-        for(int i=0; i<3; i++){
-            maxNum = Math.max(maxNum, correct[i]);
-        }
-        
-        List<Integer> list = new LinkedList<>();
-        for(int i=0; i<3; i++){
-            if(maxNum==correct[i]){
-                list.add(i+1);
+            if(answers[i]==three[i%three.length]){
+                cnt3++;
             }
         }
         
+        int max = Math.max(cnt1, Math.max(cnt2, cnt3));
+        List<Integer> list = new ArrayList<>();
+        
+        if(cnt1==max) list.add(1);
+        if(cnt2==max) list.add(2);
+        if(cnt3==max) list.add(3);
+        
         answer = new int[list.size()];
+        
         for(int i=0; i<list.size(); i++){
             answer[i] = list.get(i);
         }

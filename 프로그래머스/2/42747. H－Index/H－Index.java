@@ -7,17 +7,18 @@ class Solution {
         
         Arrays.sort(citations);
         
-        for(int h=n; h>=0; h--){
+        for(int h=citations[n-1]; h>=0; h--){
             int cnt=0;
-            for(int i=0; i<n; i++){                
+            for(int i=n-1; i>=0; i--){
                 if(citations[i]>=h){
                     cnt++;
+                } else {
+                    break;
                 }
             }
             
             if(cnt>=h){
-                answer = h;
-                break;
+                return h;
             }
         }
         

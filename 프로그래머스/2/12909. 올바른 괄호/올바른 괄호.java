@@ -9,19 +9,22 @@ class Solution {
         for(int i=0; i<s.length(); i++){
             char c = s.charAt(i);
             
-            if(c == '('){
-                st.push('(');
-            } else {
+            if(c==')'){
                 if(st.isEmpty()){
-                    return false;
+                    answer = false;
+                    break;
                 }
                 
                 st.pop();
+            } else {
+                st.push(c);
             }
         }
         
-        if(!st.isEmpty()) answer = false;
-        
+        if(!st.isEmpty()){
+            answer = false;
+        }
+
         return answer;
     }
 }

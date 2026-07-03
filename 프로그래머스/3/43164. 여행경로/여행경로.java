@@ -1,43 +1,53 @@
 import java.util.*;
 
 class Solution {
-    static String[] answer;
-    static boolean[] visited;
+    public static boolean[] visited;
+    public static ArrayList<String> ans = new ArrayList<>();
+    public static boolean found = false;
     
     public String[] solution(String[][] tickets) {
-        answer = null;
-        visited = new boolean[tickets.length];
+        String[] answer = {};
         
-        Arrays.sort(tickets, (o1,o2)-> {
-            if(o1[0].equals(o2[0])){
-                return o1[1].compareTo(o2[1]);
+        Arrays.sort(tickets, (a,b) -> {
+            if(a[0].equals(b[0])){
+                return a[1].compareTo(b[1]);
+            } else {
+                return a[0].compareTo(b[0]);
             }
-            return o1[0].compareTo(o2[0]);
         });
         
-        List<String> list = new ArrayList<>();
-        list.add("ICN");
-        dfs("ICN", list, tickets);
+        visited = new boolean[tickets.length];
+        ans.add("ICN");
+        dfs("ICN", tickets, 0);
+        
+        answer = new String[ans.size()];
+        for(int i=0; i<answer.length; i++){
+            answer[i] = ans.get(i);
+        }
         
         return answer;
     }
     
-    public void dfs(String start, List<String> list, String[][] tickets){
-        if(list.size()==tickets.length+1){
-            if(answer==null)
-                answer = list.toArray(new String[0]);
+    public static void dfs(String start, String[][] tickets, int count){
+        if(count == tickets.length){
+            found = true;
+            return;    
         }
         
         for(int i=0; i<tickets.length; i++){
-            if(!visited[i] && tickets[i][0].equals(start)){
+            if(visited[i]) continue;
+            if(tickets[i][0].equals(start)){
                 visited[i] = true;
-                list.add(tickets[i][1]);
+                ans.add(tickets[i][1]);
+                dfs(tickets[i][1], tickets, count+1);
                 
-                dfs(tickets[i][1], list, tickets);
+                if(found) return;
                 
                 visited[i] = false;
-                list.remove(list.size()-1);
+                ans.remove(ans.size()-1);
             }
         }
+        
+        return;
     }
 }

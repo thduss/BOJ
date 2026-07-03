@@ -5,21 +5,22 @@ class Solution {
         long answer = 0;
 
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-        for(int work : works){
-            pq.add(work);
+        for(int w : works){
+            pq.add(w);
         }
         
-        for(int i=0; i<n; i++){
-            int cur = pq.poll();
-            if(cur<=0) break;
-            
-            pq.add(cur-1);
+        while(n>0 && !pq.isEmpty()){
+            int remain = pq.poll() - 1;
+            if(remain>0){
+                pq.add(remain);
+            }
+            n--;
         }
         
-       while(!pq.isEmpty()){
-           int work = pq.poll();
-           answer += (long) work*work;
-       }
+        while(!pq.isEmpty()){
+            int w = pq.poll();
+            answer += (w*w);
+        }
         
         return answer;
     }

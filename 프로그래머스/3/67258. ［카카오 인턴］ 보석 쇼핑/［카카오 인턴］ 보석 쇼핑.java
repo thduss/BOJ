@@ -2,29 +2,35 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] gems) {
-        int[] answer = new int[2];
+        int[] answer = {};
         
-        int cnt= new HashSet(Arrays.asList(gems)).size();
-        int left=0, minLength=gems.length;
-        
+        Set<String> g_size = new HashSet<>();
+        for(String g : gems) g_size.add(g);
+        int size = g_size.size();
+
         Map<String, Integer> map = new HashMap<>();
-        for(int right = 0; right < gems.length; right++){
-            map.put(gems[right], map.getOrDefault(gems[right], 0)+1);
+        
+        int s = 0;
+        int minLen = gems.length;
+        answer = new int[2];
+        for(int e=0; e<gems.length; e++){
+            map.put(gems[e], map.getOrDefault(gems[e],0)+1);
             
-            while(map.size() == cnt){
-                if(right - left < minLength){
-                    minLength = right - left;
-                    answer[0] = left+1;
-                    answer[1] = right+1;
+            // start 위치 조정
+            while(map.size()==size){
+                if(e-s<minLen){
+                    minLen = e-s;
+                    answer[0] = s+1;
+                    answer[1] = e+1;
                 }
                 
-                String leftGem = gems[left];
-                map.put(leftGem, map.get(leftGem)-1);
-                if(map.get(leftGem)==0){
-                    map.remove(leftGem);
+                map.put(gems[s], map.get(gems[s])-1); 
+                if(map.get(gems[s])==0){
+                    map.remove(gems[s]);
                 }
-                left++;
+                s++;
             }
+            
         }
         
         return answer;

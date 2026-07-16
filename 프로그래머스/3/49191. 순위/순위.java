@@ -1,10 +1,11 @@
 import java.util.*;
 
 class Solution {
+    
     public int solution(int n, int[][] results) {
         int answer = 0;
-           
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();   
+
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
         ArrayList<ArrayList<Integer>> reverse = new ArrayList<>();
         
         for(int i=0; i<=n; i++){
@@ -12,19 +13,16 @@ class Solution {
             reverse.add(new ArrayList<>());
         }
         
-        for(int i=0; i<results.length; i++){
-            int u = results[i][1];
-            int v = results[i][0];
-            
-            graph.get(u).add(v);
-            reverse.get(v).add(u);
+        for(int[] r : results){
+            graph.get(r[0]).add(r[1]);
+            reverse.get(r[1]).add(r[0]);
         }
-            
+        
         for(int i=1; i<=n; i++){
-            int income = find(i, graph);
-            int outcome = find(i, reverse); 
+            int pre = count(i, n, graph);
+            int post = count(i, n, reverse);
             
-            if((income + outcome + 1)==n){
+            if(pre+post+1 == n){
                 answer++;
             }
         }
@@ -32,30 +30,27 @@ class Solution {
         return answer;
     }
     
-    public static int find(int n, ArrayList<ArrayList<Integer>> graph){
-        int cnt = 0;
+    public int count(int i, int n, ArrayList<ArrayList<Integer>> graph){
+        int count = 0;
+        boolean[] visited = new boolean[n+1];
         
         Queue<Integer> queue = new LinkedList<>();
-        boolean[] visited = new boolean[graph.size()+1];
-        visited[n] = true;
-        
-        for(int i : graph.get(n)){
-            queue.add(i);
-            visited[i] = true;
-        }
+        queue.add(i);
+        visited[i] = true;
         
         while(!queue.isEmpty()){
-            int u = queue.poll();
-            cnt++;
+            int cur = queue.poll();
+            count++;
             
-            for(int i : graph.get(u)){
-                if(!visited[i]){
-                    visited[i] = true;
-                     queue.add(i);
-                }         
+            for(int next : graph.get(cur)){
+                if(!visited[next]){
+                    visited[next] = true;
+                    queue.add(next);
+                }
             }
         }
         
-        return cnt;
+        return count-1;
+        
     }
 }

@@ -20,44 +20,50 @@ class Solution {
     public String solution(int n, int m, int x, int y, int r, int c, int k) {
         String answer = "impossible";
 
-        int shortestPath = Math.abs(r-x) + Math.abs(c-y);
-        if (shortestPath > k || (k - shortestPath) % 2 != 0) {
+        int minDist = Math.abs(x-r) + Math.abs(y-c);
+        if(minDist>k || (k-minDist)%2!=0) {
             return "impossible";
         }
         
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.add(new Node(x, y, new StringBuilder()));
+        int[] dx = {0,0,-1,1};
+        int[] dy = {-1,1,0,0};
+        String[] cmd = {"l", "r", "u", "d"};
         
-        int[] dx = {1,-1,0,0};
-        int[] dy = {0,0,1,-1};
-        String[] cmd = {"d", "u", "r", "l"};
-        boolean[][][] visited = new boolean[n + 1][m + 1][k + 1];
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(x,y,new StringBuilder()));
+        boolean[][][] visited = new boolean[n+1][m+1][k+1];
         
         while(!pq.isEmpty()){
             Node cur = pq.poll();
             int len = cur.sb.length();
+            visited[cur.x][cur.y][len] = true;
             
-            if((cur.x == r) && (cur.y == c) && (cur.sb.length()==k)){
+            if(len==k && cur.x==r && cur.y==c){
                 answer = cur.sb.toString();
                 break;
             }
-            if(visited[cur.x][cur.y][len]) continue;
-            visited[cur.x][cur.y][len] = true;
-        
+            
             if(len>=k) continue;
             
             for(int i=0; i<4; i++){
-                int nx = cur.x+dx[i];
-                int ny = cur.y+dy[i];
+                int nx = cur.x + dx[i];
+                int ny = cur.y + dy[i];
                 
-                if(nx<1 || nx>n || ny<1 || ny>m) continue;
+                if(nx<=0 || nx>n || ny<=0 || ny>m){
+                    continue;
+                }
                 
-                StringBuilder nsb = new StringBuilder(cur.sb).append(cmd[i]);
+                if(visited[nx][ny][len+1]) continue;
                 
-                pq.add(new Node(nx, ny, nsb));
+                StringBuilder sb = new StringBuilder(cur.sb).append(cmd[i]);
+                
+                pq.add(new Node(nx, ny, sb));
             }
+            
         }
         
         return answer;
     }
+    
+    
 }

@@ -1,84 +1,67 @@
 import java.util.*;
 
 class Solution {
-    
-    private static int[] dx = {0,0,1,-1};
-    private static int[] dy = {1,-1,0,0};
-    
     public int solution(String[] maps) {
         int answer = 0;
-        int x=0,y=0;
+
+        // 위치 찾기
+        int lx = 0, ly = 0;
+        int sx = 0, sy = 0;
+        int ex = 0, ey = 0;
         
-        // 출발점 찾기
         for(int i=0; i<maps.length; i++){
             for(int j=0; j<maps[0].length(); j++){
-                char c = maps[i].charAt(j);
-                if(c=='S'){
-                    x = i;
-                    y = j;
-                    break;
+                if(maps[i].charAt(j)=='L'){
+                    lx = i;
+                    ly = j;
+                } else if(maps[i].charAt(j)=='E'){
+                    ex = i;
+                    ey = j;
+                } else if(maps[i].charAt(j)=='S'){
+                    sx = i;
+                    sy = j;
                 }
             }
         }
         
-        // 레버
-        Node middle = bfs(x, y, 'L', maps);
-        answer += middle.time;
-        System.out.println(middle.x + " " + middle.y + " " + middle.time);
-        if(middle.time==-1) return -1;
+        int labber = bfs(sx, sy, lx, ly, maps);
+        int exit = bfs(lx, ly, ex, ey, maps);
+        // System.out.println(labber + " " + exit);
+        if(labber==-1 || exit==-1) return -1;
         
-        Node end = bfs(middle.x, middle.y, 'E', maps);
-        answer += end.time;
-        
-        if(end.time==-1) return -1;
-        
-        return answer;
+        return labber + exit;
     }
     
-    public static class Node{
-        int x, y, time;
-        
-        Node(int x, int y, int time){
-            this.x = x;
-            this.y = y;
-            this.time = time;
-        }
-    }
+    public static int[] dx = {0,0,-1,1};
+    public static int[] dy = {-1,1,0,0};
     
-    private Node bfs(int x, int y, char end, String[] maps){
-    
-        Queue<Node> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[maps.length][maps[0].length()];
+    public static int bfs(int sx, int sy, int ex, int ey, String[] maps){
+        int N = maps.length, M = maps[0].length();
+        int answer = -1;
         
-        queue.add(new Node(x,y,0));
-        visited[x][y] = true;
+        boolean[][] visited = new boolean[N][M];
+        
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{sx, sy, 0});
         
         while(!queue.isEmpty()){
-            Node cur = queue.poll();
+            int[] cur = queue.poll();
             
-            // 종료 조건
-            if(maps[cur.x].charAt(cur.y)==end){
-                return cur;
+            if(cur[0]==ex && cur[1]==ey){
+                answer = cur[2];
+                break;
             }
             
             for(int i=0; i<4; i++){
-                int nx = cur.x + dx[i];
-                int ny = cur.y + dy[i];
+                int nx = cur[0] + dx[i];
+                int ny = cur[1] + dy[i];
                 
-                
-                if(nx>=maps.length || nx<0 || ny>=maps[0].length() || ny<0){
-                    continue;
-                }
-                    
-                if(maps[nx].charAt(ny)=='X' || visited[nx][ny]){
-                    continue;
-                }
-                
+                if(nx<0 || nx>=N || ny<0 || ny>=M || visited[nx][ny] || maps[nx].charAt(ny)=='X') continue;
                 visited[nx][ny] = true;
-                queue.add(new Node(nx, ny, cur.time+1));
+                queue.add(new int[]{nx, ny, cur[2]+1});
             }
         }
         
-        return new Node(x,y,-1);
+        return answer;
     }
 }

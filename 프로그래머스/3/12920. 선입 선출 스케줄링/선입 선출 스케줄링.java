@@ -15,7 +15,7 @@ class Solution {
         n -= cores.length;
         long target_time = 0;
         
-        while(l<=r){
+        while(l<r){
             long mid_time = (l+r)/2;
             
             long cnt=0;
@@ -23,7 +23,7 @@ class Solution {
             
             if (cnt >= n) {
                 target_time = mid_time;
-                r = mid_time - 1;
+                r = mid_time;
             } else {
                 l = mid_time + 1;
             }

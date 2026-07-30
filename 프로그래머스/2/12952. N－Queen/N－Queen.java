@@ -1,47 +1,43 @@
 import java.util.*;
 
 class Solution {
-    
-    public static int count=0;
-    public static int[] arr;
+    public int cnt, N;
     
     public int solution(int n) {
         int answer = 0;
+        cnt = 0;
+        N = n;
         
-        arr = new int[n];
+        dfs(0, new int[n]);
         
-        nQueen(0, n);
-        answer = count;
-        
+        answer = cnt;
         return answer;
     }
     
-    public static void nQueen(int depth, int N){
-        
-        if(depth == N) {
-            count++;
+    public void dfs(int n, int[] arr){
+        if(n==N){
+            cnt++;
             return;
         }
         
         for(int i=0; i<N; i++){
-            arr[depth] = i;
+            arr[n] = i;
             
-            if(Possibility(depth)){
-                nQueen(depth+1, N);
-            }
-        }
-    }
-    
-    public static boolean Possibility(int col){
-        for(int i=0; i<col; i++){
-            if(arr[col]==arr[i]){
-                return false;
-            }
-            else if (Math.abs(col-i)==Math.abs(arr[col]-arr[i])){
-                return false;
+            if(Possible(n, arr)){
+                dfs(n+1, arr);
             }
         }
         
+        return;
+    }
+    
+    public boolean Possible(int n, int[] arr){
+        for(int i=0; i<n; i++){
+            if(arr[n]==arr[i]) return false;
+            if(Math.abs(n-i)==Math.abs(arr[n]-arr[i])) return false;
+        }
+        
         return true;
+    
     }
 }

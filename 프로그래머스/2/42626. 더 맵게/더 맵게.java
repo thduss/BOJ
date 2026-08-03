@@ -5,27 +5,26 @@ class Solution {
         int answer = 0;
 
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for(int s : scoville){
-            pq.add(s);
-        }
+        for(int s : scoville) pq.add(s);
         
-        while(true){
-            int f = pq.poll();
-            
-            if(f >= K){
-                break;
+        while(pq.size()>=2){
+            int first = pq.poll();
+            if(first>=K) {
+                pq.add(first);
+                return answer;
             }
+            int second = pq.poll();
             
-            if(pq.isEmpty()){
-                answer = -1;
-                break;
-            }
-            
-            int e = pq.poll();
-            pq.add(f + (e * 2));
+            int mix = first + second*2;
+            pq.add(mix);
             answer++;
         }
         
-        return answer;
+        if(!pq.isEmpty()){
+            int cur = pq.poll();
+            if(cur>=K) return answer;
+        }
+        
+        return -1;
     }
 }

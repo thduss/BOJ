@@ -5,35 +5,44 @@ class Solution {
         int[] answer = {};
 
         Stack<Integer> stack = new Stack<>();
-        List<Integer> list = new ArrayList<>();
-        int cnt=0;
+        List<Integer> ans = new ArrayList<>();
+        int pre = 0;
+        
         for(int i=0; i<progresses.length; i++){
             int day = (100-progresses[i])/speeds[i];
-            if(((100-progresses[i])%speeds[i])!=0) day+=1;
             
-            cnt++;
-            if(stack.empty()){
-                stack.push(day);
-                continue;
-            }
+            if((100-progresses[i])%speeds[i]!=0) day++;
             
-            if(stack.peek()<day){
-                stack.pop();
-                list.add(cnt-1);
-                cnt=1;
+            if(stack.isEmpty() || pre>=day){
+                pre = Math.max(pre, day);
+                stack.add(day);
+            } else {
+                
+                int cnt=0;
+                
+                while(!stack.isEmpty()){
+                    stack.pop();
+                    cnt++;
+                }
+                
+                ans.add(cnt);
+                
+                pre = Math.max(pre, day);
                 stack.add(day);
             }
-            
         }
         
-        if(!stack.isEmpty()){
-            list.add(cnt);
+        int cnt=0;
+        
+        while(!stack.isEmpty()){
+            stack.pop();
+            cnt++;
         }
-
-        answer = new int[list.size()];
-        for(int i=0; i<list.size(); i++){
-            answer[i] = list.get(i);
-        }
+        
+        if(cnt>0) ans.add(cnt);
+        
+        answer = new int[ans.size()];
+        for(int i=0; i<ans.size(); i++) answer[i] = ans.get(i);
         
         return answer;
     }

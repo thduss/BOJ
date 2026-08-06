@@ -1,15 +1,15 @@
+// 곡괭이 5개 연속 사용 
+// 최소 피로도: 다이아몬드 -> 철 -> 돌 순서
+
 import java.util.*;
 
 class Solution {
     
-    static class MineralChunk implements Comparable<MineralChunk>{
-        int diaCount = 0;
-        int ironCount = 0;
-        int stoneCount = 0;
-        int weight =0;
+    public class Chunks implements Comparable<Chunks>{
+        int dia=0, iron=0, stone=0, weight=0;
         
         @Override
-        public int compareTo(MineralChunk o){
+        public int compareTo(Chunks o){
             return o.weight - this.weight;
         }
     }
@@ -17,47 +17,52 @@ class Solution {
     public int solution(int[] picks, String[] minerals) {
         int answer = 0;
         
+        List<Chunks> list = new ArrayList<>();
+        
         int totalPicks = picks[0] + picks[1] + picks[2];
-        if(totalPicks==0) return 0;
+        int maxMineralCount = Math.min(minerals.length, totalPicks * 5);
         
-        int maxMinerals = Math.min(totalPicks*5, minerals.length);
-        
-        List<MineralChunk> chunks = new ArrayList<>();
-        
-        for(int i=0; i<maxMinerals; i+=5){
-            MineralChunk chunk = new MineralChunk();
-            int end = Math.min(maxMinerals,  i+5);
+        for(int i=0; i<maxMineralCount; i+=5){
+            int end = Math.min(maxMineralCount, i+5);
+            
+            Chunks nc = new Chunks();
             
             for(int j=i; j<end; j++){
-                if(minerals[j].equals("diamond")){
-                    chunk.diaCount++;
-                    chunk.weight += 25;
-                } else if (minerals[j].equals("iron")){
-                    chunk.ironCount++;
-                    chunk.weight += 5;
+                String m = minerals[j];
+                
+                if(m.equals("diamond")){
+                    nc.dia++;
+                    nc.weight+=25;
+                } else if(m.equals("iron")){
+                    nc.iron++;
+                    nc.weight+=5;
                 } else {
-                    chunk.stoneCount++;
-                    chunk.weight += 1;
+                    nc.stone++;
+                    nc.weight+=1;
                 }
             }
             
-            chunks.add(chunk);
+            list.add(nc);
         }
         
-        Collections.sort(chunks);
+        Collections.sort(list);
         
-        for(MineralChunk chunk : chunks){
+        // 다이아부터
+        for(int i=0; i<list.size(); i++){
+            Chunks c = list.get(i);
+            
             if(picks[0]>0){
-                answer += chunk.diaCount + chunk.ironCount + chunk.stoneCount;
-                picks[0]--;
+                answer += (c.dia + c.iron + c.stone);
+                picks[0]--; 
             } else if (picks[1]>0){
-                answer += chunk.diaCount*5 + chunk.ironCount + chunk.stoneCount;
-                picks[1]--;
+                answer += (c.dia*5 + c.iron + c.stone);
+                picks[1]--; 
             } else if (picks[2]>0){
-                answer += chunk.diaCount * 25 + chunk.ironCount * 5 + chunk.stoneCount;
-                picks[2]--;
+                answer += (c.dia*25 + c.iron*5 + c.stone);
+                picks[2]--; 
             }
         }
+        
         
         return answer;
     }

@@ -2,32 +2,34 @@ import java.util.*;
 
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int answer = n-lost.length;
-        
-        HashSet<Integer> set = new HashSet<>();
-        for(int i : reserve){
-            set.add(i);
-        }
+        int answer = n - lost.length;
+
+        Set<Integer> set = new HashSet<>();
+        for(int i : reserve) set.add(i);
         
         Arrays.sort(lost);
         
+        // 자기 자신
         for(int i=0; i<lost.length; i++){
-            if(set.contains(lost[i])){
-                answer++;
-                set.remove(lost[i]);
-                lost[i] = -1;
+            int num = lost[i];
+            
+            if(set.contains(num)){
+                answer++; 
+                set.remove(num);
+                lost[i]=-1;
             }
         }
         
-        for(int i=0; i<lost.length; i++){
-            if(lost[i]==-1) continue;
+        // 앞 사람 먼저 빌려주기
+        for(int i : lost){
+            if(i==-1) continue;
             
-            if(set.contains(lost[i]-1)){
+            if(set.contains(i-1)){
+                answer++; 
+                set.remove(i-1);
+            } else if(set.contains(i+1)){
                 answer++;
-                set.remove(lost[i]-1);
-            } else if (set.contains(lost[i]+1)){
-                answer++;
-                set.remove(lost[i]+1);
+                set.remove(i+1);
             }
         }
         

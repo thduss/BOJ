@@ -1,46 +1,22 @@
+// 상하좌우 테두리 줄이기
 class Solution {
     public int[][] solution(int n) {
         int[][] answer = new int[n][n];
         
-        int num=1, cnt=n;
-        int[] dx = {0,1,0,-1};
-        int[] dy = {1,0,-1,0};
-        
-        int x=0, y=0;
+        int top = 0, left = 0, right = n-1, bottom = n-1;
+        int num = 1;
         while(num<=n*n){
-            // ->
-            for(int i=0; i<cnt && num<=n*n; i++){
-                if(x==0 && y==0 && i==0) {
-                    answer[x][y] = num++;
-                    continue;
-                }
-                x += dx[0];
-                y += dy[0];
-                answer[x][y] = num++;
-            }
-            cnt--;
+            for(int y = left; y<=right; y++) answer[top][y] = num++;
+            top++;
             
-            // v
-            for(int i=0; i<cnt && num<=n*n; i++){
-                x += dx[1];
-                y += dy[1];
-                answer[x][y] = num++;
-            }
+            for(int x = top; x<=bottom; x++) answer[x][right] = num++;
+            right--;
             
-            // <-
-            for(int i=0; i<cnt && num<=n*n; i++){
-                x += dx[2];
-                y += dy[2];
-                answer[x][y] = num++;
-            }
-            cnt--;
+            for(int y = right; y>=left; y--) answer[bottom][y] = num++;
+            bottom--;
             
-            // ^
-            for(int i=0; i<cnt && num<=n*n; i++){
-                x += dx[3];
-                y += dy[3];
-                answer[x][y] = num++;
-            }
+            for(int x = bottom; x>=top; x--) answer[x][left] = num++;
+            left++;
         }
         
         return answer;

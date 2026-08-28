@@ -4,31 +4,40 @@ class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
         int[] answer = new int[id_list.length];
 
-        // id = 이름
-        Map<String, Integer> ids = new HashMap<>();
-        for(int i=0; i<id_list.length; i++){
-            ids.put(id_list[i], i);
-        }
-        
-        // 신고 횟수
         Map<String, Set<String>> map = new HashMap<>();
-        for(String s : report){
-            String[] str = s.split(" ");
+        Map<String, Set<String>> repo = new HashMap<>();
+        
+        for(String rep : report){
+            String[] arr = rep.split(" ");
             
-            if(!map.containsKey(str[1])){
-                map.put(str[1], new HashSet<>());
+            map.putIfAbsent(arr[1], new HashSet<>());
+            map.get(arr[1]).add(arr[0]);
+            
+            repo.putIfAbsent(arr[0], new HashSet<>());
+            repo.get(arr[0]).add(arr[1]);
+        }
+        
+        Map<String, Boolean> stop = new HashMap<>();
+        for(int i=0; i<id_list.length; i++){
+            String name = id_list[i];
+            
+            int size = map.getOrDefault(name, new HashSet<>()).size();
+            if(size/k>0){
+                stop.put(name, true);
+            } else {
+                stop.put(name, false);
             }
-            map.get(str[1]).add(str[0]);
         }
         
         for(int i=0; i<id_list.length; i++){
-            Set<String> check = map.getOrDefault(id_list[i], new HashSet<>());
+            String name = id_list[i];
+            Set<String> set = repo.getOrDefault(name, new HashSet<>());
+            if(set.size()==0) continue;
             
-            if(check.size()<k) continue;
-            
-            for(String c : check){
-                int idx = ids.get(c);
-                answer[idx] += 1;
+            for(String n : set){
+                if(stop.getOrDefault(n, false)){
+                    answer[i]++;
+                }
             }
         }
         

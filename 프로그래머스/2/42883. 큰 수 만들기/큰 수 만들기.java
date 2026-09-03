@@ -4,44 +4,31 @@ class Solution {
     public String solution(String number, int k) {
         String answer = "";
 
-        Stack<Integer> stack = new Stack<>();
-        int[] numbers = new int[number.length()];
+        Stack<Character> st = new Stack<>();
         for(int i=0; i<number.length(); i++){
-            numbers[i] = number.charAt(i) - '0';
+            char c = number.charAt(i);
+            if(st.isEmpty()){
+                st.add(c);
+            } else {
+                while(!st.isEmpty() && st.peek()<c && k>0){
+                    k--;
+                    st.pop();
+                }
+                st.add(c);
+            }
         }
         
-        for(int i=0; i<numbers.length; i++){
-            if(k==0) {
-                stack.add(numbers[i]);
-                continue;
-            }
-            
-            if(stack.isEmpty()){
-                stack.add(numbers[i]);
-                continue;
-            }
-            
-            while(!stack.isEmpty() && stack.peek()<numbers[i] && k>0){
-                k--;
-                stack.pop();
-            }
-            
-            stack.add(numbers[i]);
-            
-        }
-        
-        while(k > 0) {
-            stack.pop();
+        while(k>0){
+            st.pop();
             k--;
         }
         
         StringBuilder sb = new StringBuilder();
-        while(!stack.isEmpty()){
-            sb.append(stack.pop());
+        while(!st.isEmpty()){
+            sb.append(st.pop());
         }
         
         answer = sb.reverse().toString();
-        
         return answer;
     }
 }

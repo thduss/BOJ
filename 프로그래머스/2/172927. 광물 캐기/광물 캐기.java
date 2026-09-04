@@ -1,68 +1,63 @@
-// 곡괭이 5개 연속 사용 
-// 최소 피로도: 다이아몬드 -> 철 -> 돌 순서
-
 import java.util.*;
 
 class Solution {
-    
-    public class Chunks implements Comparable<Chunks>{
-        int dia=0, iron=0, stone=0, weight=0;
+    public class Node{
+        int dia, iron, stone;
         
-        @Override
-        public int compareTo(Chunks o){
-            return o.weight - this.weight;
+        public Node(int dia, int iron, int stone){
+            this.dia = dia;
+            this.iron = iron;
+            this.stone = stone;
         }
     }
     
     public int solution(int[] picks, String[] minerals) {
         int answer = 0;
         
-        List<Chunks> list = new ArrayList<>();
-        
-        int totalPicks = picks[0] + picks[1] + picks[2];
-        int maxMineralCount = Math.min(minerals.length, totalPicks * 5);
-        
-        for(int i=0; i<maxMineralCount; i+=5){
-            int end = Math.min(maxMineralCount, i+5);
+        // 광물은 순서대로 캠 -> 연속 5개
+        int pcnt = picks[0] + picks[1] + picks[2];
+        List<Node> list = new ArrayList<>();
+        for(int i=0; i<Math.min(minerals.length, pcnt*5); i+=5){
+            int dia=0, iron=0, stone=0;
             
-            Chunks nc = new Chunks();
-            
-            for(int j=i; j<end; j++){
-                String m = minerals[j];
-                
-                if(m.equals("diamond")){
-                    nc.dia++;
-                    nc.weight+=25;
-                } else if(m.equals("iron")){
-                    nc.iron++;
-                    nc.weight+=5;
+            for(int j=i; j<i+5 && j<minerals.length; j++){
+                if(minerals[j].equals("diamond")){
+                    dia++;
+                } else if (minerals[j].equals("iron")){
+                    iron++;
                 } else {
-                    nc.stone++;
-                    nc.weight+=1;
+                    stone++;
                 }
             }
             
-            list.add(nc);
+            list.add(new Node(dia, iron, stone));
         }
         
-        Collections.sort(list);
+        Collections.sort(list, (a,b)-> {
+            if(a.dia!=b.dia) return b.dia - a.dia;
+            if(a.iron!=b.iron) return b.iron - a.iron;
+            return b.stone - a.stone;
+        });
         
-        // 다이아부터
-        for(int i=0; i<list.size(); i++){
-            Chunks c = list.get(i);
+        int idx=0;
+        for(int i=0; i<picks.length; i++){
+            int cnt = picks[i];
             
-            if(picks[0]>0){
-                answer += (c.dia + c.iron + c.stone);
-                picks[0]--; 
-            } else if (picks[1]>0){
-                answer += (c.dia*5 + c.iron + c.stone);
-                picks[1]--; 
-            } else if (picks[2]>0){
-                answer += (c.dia*25 + c.iron*5 + c.stone);
-                picks[2]--; 
+            while(cnt-->0 && idx<list.size()){
+                answer += get(i, list.get(idx++));
             }
         }
         
+        return answer;
+    }
+    
+    public int get(int i, Node n){
+        int[][] minus = {{1,1,1},{5,1,1},{25,5,1}};
+        int answer=0;
+        
+        answer += n.dia * minus[i][0];
+        answer += n.iron * minus[i][1];
+        answer += n.stone * minus[i][2];
         
         return answer;
     }

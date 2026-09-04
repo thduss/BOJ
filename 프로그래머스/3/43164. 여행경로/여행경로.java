@@ -1,53 +1,52 @@
 import java.util.*;
 
 class Solution {
-    public static boolean[] visited;
-    public static ArrayList<String> ans = new ArrayList<>();
-    public static boolean found = false;
+    List<String> list;
+    boolean[] visited;
+    boolean found = false;
     
     public String[] solution(String[][] tickets) {
         String[] answer = {};
+        list = new ArrayList<>();
+        visited = new boolean[tickets.length];
         
         Arrays.sort(tickets, (a,b) -> {
-            if(a[0].equals(b[0])){
-                return a[1].compareTo(b[1]);
-            } else {
+            if(!a[0].equals(b[0])) {
                 return a[0].compareTo(b[0]);
             }
+            return a[1].compareTo(b[1]);
         });
         
-        visited = new boolean[tickets.length];
-        ans.add("ICN");
-        dfs("ICN", tickets, 0);
+        list.add("ICN");
+        find("ICN", 0, tickets);
         
-        answer = new String[ans.size()];
-        for(int i=0; i<answer.length; i++){
-            answer[i] = ans.get(i);
+        answer = new String[list.size()];
+        
+        for(int i=0; i<list.size(); i++){
+            answer[i] = list.get(i);
         }
         
         return answer;
     }
     
-    public static void dfs(String start, String[][] tickets, int count){
-        if(count == tickets.length){
+    public void find(String city, int cnt, String[][] tickets){
+        if(cnt==tickets.length) {
             found = true;
-            return;    
+            return;
         }
         
         for(int i=0; i<tickets.length; i++){
             if(visited[i]) continue;
-            if(tickets[i][0].equals(start)){
+            if(tickets[i][0].equals(city)){
                 visited[i] = true;
-                ans.add(tickets[i][1]);
-                dfs(tickets[i][1], tickets, count+1);
+                list.add(tickets[i][1]);
+                find(tickets[i][1], cnt+1, tickets);
                 
                 if(found) return;
                 
+                list.remove(list.size()-1);
                 visited[i] = false;
-                ans.remove(ans.size()-1);
             }
         }
-        
-        return;
     }
 }

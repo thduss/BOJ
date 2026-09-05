@@ -1,32 +1,41 @@
 import java.util.*;
 
 class Solution {
+    int[] root;
+    
     public int solution(int n, int[][] computers) {
         int answer = 0;
-
-        Queue<Integer> queue = new LinkedList<>();
-        boolean[] visited = new boolean[n];
+        
+        root = new int[n];
+        for(int i=0; i<n; i++) root[i] = i;
         
         for(int i=0; i<n; i++){
-            if(!visited[i]){
-                answer++;
-                queue.add(i);
-                visited[i] = true;
-            }
-            
-            while(!queue.isEmpty()){
-                int cur = queue.poll();
+            for(int j=0; j<n; j++){
+                if(i==j) continue;
                 
-                for(int j=0; j<n; j++){
-                    if(!visited[j] && computers[cur][j]==1){
-                        visited[j] = true;
-                        queue.add(j);
-                    }
-                    
+                if(computers[i][j]==1){
+                    union(i, j);
                 }
             }
         }
         
+        for(int i=0; i<n; i++) {
+            if(i == root[i]) answer++;
+        }
+        
         return answer;
+    }
+    
+    public void union(int a, int b){
+        int x = find(a);
+        int y = find(b);
+        
+        if(x!=y) root[x] = y;
+    }
+    
+    public int find(int x){
+        if(root[x]==x) return x;
+        
+        return root[x] = find(root[x]);
     }
 }

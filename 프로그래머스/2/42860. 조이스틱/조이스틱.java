@@ -6,21 +6,20 @@ class Solution {
         
         int move = name.length()-1;
         for(int i=0; i<name.length(); i++){
-            int s = 'A';
-            int target = name.charAt(i);
+            int f = name.charAt(i) - 'A';
+            int b = 'Z' - name.charAt(i) + 1;
+            answer += Math.min(f,b);
             
-            answer += Math.min(Math.abs(s-target), Math.abs('Z'-target)+1);
+            // 연속'A' 개수
+            int idx = i+1;
+            while(idx<name.length() && name.charAt(idx)=='A') idx++;
             
-            int index = i+1;
-            while(index<name.length() && name.charAt(index)=='A'){
-                index++;
-            }
-            
-            move = Math.min(move, i*2+name.length()-index);
-            move = Math.min(move, (name.length()-index)*2+i);
+            int fmove = 2*i + (name.length()-idx); 
+            int bmove = (name.length()-idx)*2 + i;
+            move = Math.min(move, Math.min(fmove,bmove));
         }
         
-        answer += move;
+        answer+=move;
         
         return answer;
     }

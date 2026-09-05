@@ -3,17 +3,26 @@ import java.util.*;
 class Solution {
     public int solution(int[][] routes) {
         int answer = 0;
+
+        Arrays.sort(routes, (a,b) -> a[0] - b[0]);
         
-        // 나가는 기준 오름차순
-        Arrays.sort(routes, (o1,o2) -> o1[1] - o2[1]);
-        
-        int lastCameraPos = -30001;
-        
-        for(int[] route : routes){
-            if(lastCameraPos<route[0]){
-                answer++;
-                lastCameraPos = route[1];
+        int idx=0;
+        while(idx<routes.length){
+            int s = routes[idx][0];
+            int e = routes[idx][1];
+            
+            int next = idx + 1;
+            while(next<routes.length){
+                if(routes[next][0]>e) break;
+                
+                s = Math.max(s, routes[next][0]);
+                e = Math.min(e, routes[next][1]);
+                
+                next++;
             }
+            
+            idx = next;
+            answer++;
         }
         
         return answer;

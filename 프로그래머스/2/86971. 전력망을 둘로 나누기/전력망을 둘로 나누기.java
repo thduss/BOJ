@@ -4,8 +4,7 @@ class Solution {
     List<List<Integer>> graph;
     
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
-
+        int answer = n;
         graph = new ArrayList<>();
         for(int i=0; i<=n; i++) graph.add(new ArrayList<>());
         
@@ -18,39 +17,51 @@ class Solution {
             graph.get(w[0]).remove(Integer.valueOf(w[1]));
             graph.get(w[1]).remove(Integer.valueOf(w[0]));
             
-            int a = find(w[0], n);
-            int b = find(w[1], n);
-            
-            answer = Math.min(answer, Math.abs(a-b));
+            int diff = find(n);
+            answer = Math.min(answer, diff);
             
             graph.get(w[0]).add(w[1]);
             graph.get(w[1]).add(w[0]);
         }
         
+        
         return answer;
     }
     
-    public int find(int start, int N){
-        int cnt=0;
+    public int find(int n){
+        boolean[] visited = new boolean[n+1];
+        List<Integer> set = new ArrayList<>();
         
-        Queue<Integer> queue = new ArrayDeque<>();
-        queue.add(start);
-        
-        boolean[] visited = new boolean[N+1];
-        visited[start] = true;
-        
-        while(!queue.isEmpty()){
-            int cur = queue.poll();
-            cnt++;
+        for(int i=1; i<=n; i++){
+            if(visited[i]) continue;
             
-            for(int nxt : graph.get(cur)){
-                if(!visited[nxt]){
-                    visited[nxt] = true;
-                    queue.add(nxt);
+            int cnt = 0;
+            Queue<Integer> queue = new ArrayDeque<>();
+            queue.add(i);
+            visited[i] = true;
+            
+            while(!queue.isEmpty()){
+                int cur = queue.poll();
+                cnt++;
+                
+                for(int nxt : graph.get(cur)){
+                    if(!visited[nxt]) {
+                        queue.add(nxt);
+                        visited[nxt]=true;
+                    }
                 }
             }
+            
+            set.add(cnt);
         }
         
-        return cnt;
+        if(set.size()==2){
+            int a = set.get(0);
+            int b = set.get(1);
+            
+            return Math.abs(a-b);
+        }
+        
+        return n;
     }
 }

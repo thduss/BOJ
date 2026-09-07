@@ -4,29 +4,37 @@ class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
 
-        List<String> cache = new ArrayList<>();
-        Set<String> set = new HashSet<>();
+        Queue<String> queue = new ArrayDeque<>();
+        Set<String> cache = new HashSet<>();
         
         if(cacheSize==0) return 5*cities.length;
         
-        for(String city : cities){
-            String c = city.toLowerCase();
+        for(int i=0; i<cities.length; i++){
+            String city = cities[i].toLowerCase();
             
-            if(set.contains(c)){
-                answer += 1;
-                cache.remove(c);
-                cache.add(0, c);
-            } else {
-                answer += 5;
-                
-                if(cache.size()>=cacheSize){
-                    String remove = cache.get(cache.size()-1);
-                    cache.remove(cache.size()-1);
-                    set.remove(remove);
+            if(queue.size()<cacheSize){
+                if(cache.contains(city)){
+                    queue.remove(city);
+                    queue.add(city);
+                    answer+=1;
+                } else {
+                    queue.add(city);
+                    cache.add(city);
+                    answer+=5;
                 }
-
-                cache.add(0,c);
-                set.add(c);
+                continue;
+            } 
+            
+            if(cache.contains(city)){
+                queue.remove(city);
+                queue.add(city);
+                answer+=1;
+            } else {
+                String str = queue.poll();
+                cache.remove(str);
+                queue.add(city);
+                cache.add(city);
+                answer+=5;
             }
         }
         

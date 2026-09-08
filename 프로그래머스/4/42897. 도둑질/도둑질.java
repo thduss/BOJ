@@ -1,0 +1,23 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[] money) {
+        int answer = 0;
+
+        int[] dp = new int[money.length+1];
+        dp[1] = money[0];
+        for(int i=2; i<money.length; i++){
+            dp[i] = Math.max(dp[i-1], dp[i-2]+money[i-1]);
+        }
+        answer = dp[money.length-1];
+        
+        dp = new int[money.length+1];
+        dp[1] = money[1];
+        for(int i=2; i<money.length; i++){
+            dp[i] = Math.max(dp[i-1], dp[i-2]+money[i]);
+        }
+        answer = Math.max(answer, dp[money.length-1]);
+        
+        return answer;
+    }
+}

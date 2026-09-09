@@ -6,16 +6,16 @@ class Solution {
 
         Stack<Character> st = new Stack<>();
         for(int i=0; i<number.length(); i++){
-            char c = number.charAt(i);
-            if(st.isEmpty()){
-                st.add(c);
-            } else {
-                while(!st.isEmpty() && st.peek()<c && k>0){
-                    k--;
-                    st.pop();
-                }
-                st.add(c);
+            if(st.isEmpty() || k<=0) {
+                st.add(number.charAt(i));
+                continue;
             }
+            
+            while(!st.isEmpty() && k>0 && st.peek()<number.charAt(i)){
+                st.pop();
+                k--;
+            }
+            st.add(number.charAt(i));
         }
         
         while(k>0){
@@ -29,6 +29,7 @@ class Solution {
         }
         
         answer = sb.reverse().toString();
+        
         return answer;
     }
 }

@@ -1,40 +1,64 @@
 import java.util.*;
 
 class Solution {
+    public class Node implements Comparable<Node> {
+        int v, w;
+        
+        Node(int v, int w){
+            this.v = v;
+            this.w = w;
+        }
+        
+        @Override
+        public int compareTo(Node o){
+            return this.w - o.w;
+        }
+    }
+    
+    public List<List<Node>> graph;
+    
     public int solution(int n, int s, int a, int b, int[][] fares) {
-        int INF = 20000000;
-        int answer = INF;
+        int answer = Integer.MAX_VALUE;
         
-        // 초기화
-        int[][] dist = new int[n+1][n+1];
+        graph = new ArrayList<>();
+        for(int i=0; i<=n; i++) graph.add(new ArrayList<>());
+        
+        for(int[] f : fares){
+            graph.get(f[0]).add(new Node(f[1], f[2]));
+            graph.get(f[1]).add(new Node(f[0], f[2]));
+        }
+        
+        int[] fromS = dijkstra(s, n);
+        int[] fromA = dijkstra(a, n);
+        int[] fromB = dijkstra(b, n);
+        
         for(int i=1; i<=n; i++){
-            Arrays.fill(dist[i], INF);
-            dist[i][i] = 0;
+            if(fromS[i]==Integer.MAX_VALUE || fromA[i]==Integer.MAX_VALUE || fromB[i]==Integer.MAX_VALUE) continue;
+            answer = Math.min(answer, fromS[i] + fromB[i] + fromA[i]);
         }
         
-        for(int[] fare : fares){
-            int u = fare[0];
-            int v = fare[1];
-            int w = fare[2];
+        return answer;
+    }
+    
+    public int[] dijkstra(int s, int n){
+        int[] dist = new int[n+1];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[s] = 0;
+        
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(s);
+        
+        while(!queue.isEmpty()){
+            int cur = queue.poll();
             
-            dist[u][v] = w;
-            dist[v][u] = w;
-        }
-        
-        // i -> k -> j
-        for(int k=1; k<=n; k++){
-            for(int i=1; i<=n; i++){
-                for(int j=1; j<=n; j++){
-                    dist[i][j] = Math.min(dist[i][j], dist[i][k]+dist[k][j]);
+            for(Node nxt : graph.get(cur)){
+                if(dist[nxt.v]>dist[cur]+nxt.w){
+                    dist[nxt.v] = dist[cur] + nxt.w;
+                    queue.add(nxt.v);
                 }
             }
         }
         
-        // (s -> k) + (k -> a) + (k -> b)
-        for(int k=1; k<=n; k++){
-            answer = Math.min(answer, dist[s][k] + dist[k][a] + dist[k][b]);
-        }
-        
-        return answer;
+        return dist;
     }
 }

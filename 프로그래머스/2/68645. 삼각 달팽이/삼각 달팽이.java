@@ -3,36 +3,29 @@ import java.util.*;
 class Solution {
     public int[] solution(int n) {
         int[] answer = {};
-
-        int total = 0;
-        for(int i=1; i<=n; i++) total+=i;
-        answer = new int[total];
         
-        int size = n;
-        int num = 1, idx=-1, row=-1;
-        while(num <= total){
-            // 아래로 등차수열 증가
-            for(int i=0; i<size && num<=total; i++){
-                row++;
-                idx = (idx == -1) ? 0 : idx + row;
-                answer[idx] = num++;
+        int[][] map = new int[n][n];
+        
+        int num=1;
+        int r=-1, c=0;
+        for(int i=0; i<n; i++){
+            for(int j=i; j<n; j++){
+                if(i%3==0) r++;
+                else if(i%3==1) c++;
+                else {
+                    r--;
+                    c--;
+                }
+                map[r][c] = num++;
             }
-            size--;
-            
-            // +1씩 증가
-            for(int i=0; i<size && num<=total; i++){
-                idx++;
-                answer[idx] = num++;
+        }
+        
+        answer = new int[num-1];
+        int idx=0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<=i; j++){
+                answer[idx++] = map[i][j];
             }
-            size--;
-            
-            // 위로 등차수열 감소
-            for(int i=0; i<size && num<=total; i++){
-                idx -= (row+1);
-                row--;
-                answer[idx] = num++;
-            }
-            size--;
         }
         
         return answer;

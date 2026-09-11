@@ -1,27 +1,40 @@
-// m명 늘어날 때마다 1대 추가
-// n*m <= x < (n+1)*m : n대
-// 한 번 증설 서버 : k시간 운영/그후 반납
-// 최소 몇 번 증설?
-
 import java.util.*;
 
 class Solution {
+    public class Node implements Comparable<Node> {
+        int finishTime, cnt;
+        
+        public Node(int f, int cnt){
+            finishTime = f;
+            this.cnt = cnt;
+        }
+        
+        @Override
+        public int compareTo(Node o){
+            return this.finishTime - o.finishTime;
+        }
+    }
+    
     public int solution(int[] players, int m, int k) {
         int answer = 0;
 
-        int[] add = new int[players.length];            
-        int server = players[0]/m;
-        add[0] = server;
-        answer += server;
+        PriorityQueue<Node> finServer = new PriorityQueue<>(); // 끝나는 시각 저장
+        int server = 0; // k시간 유지
         
-        for(int i=1; i<players.length; i++){
-            int need = players[i]/m;
-            if(i-k>=0) server -= add[i-k];
+        for(int t=0; t<players.length; t++){
+            int need = players[t] / m;
             
-            if(need>server){
-                answer += (need-server);
-                add[i] += (need-server);
-                server += add[i];
+            while(!finServer.isEmpty() && finServer.peek().finishTime<=t){
+                Node cur = finServer.poll();
+                server -= cur.cnt;
+            }
+            
+            if(server<need){
+                int add = need - server;
+                server = need;
+                answer += add;
+                
+                finServer.add(new Node(t+k, add));
             }
         }
         

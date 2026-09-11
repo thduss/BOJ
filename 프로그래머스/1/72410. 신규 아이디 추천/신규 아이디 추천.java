@@ -1,69 +1,75 @@
+import java.util.*;
+
 class Solution {
     public String solution(String new_id) {
         String answer = "";
-
-        // 3 이상 15 이하
-        // 소문자, 숫자, -, _, . 
-        // .처음과 끝 X, 연속 사용 X
         
-        // step1
         new_id = new_id.toLowerCase();
+        new_id = removeUnique(new_id);
+        new_id = oneComma(new_id);
+        new_id = sComma(new_id);
+        new_id = eComma(new_id);
         
-        // step2 & 3
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i<new_id.length(); i++){
-            if(sb.length()>0 && new_id.charAt(i)=='.' && sb.charAt(sb.length()-1)=='.'){
-                continue;
-            }
+        if(new_id.length()<=0) new_id="a";
+        if(new_id.length()>=16){
+            new_id = new_id.substring(0,15);
+            new_id = eComma(new_id);
+        }
+        
+        if(new_id.length()<=2) {
+            char c = new_id.charAt(new_id.length()-1);
             
-            if(check(new_id.charAt(i))){
-                sb.append(new_id.charAt(i));
-            }
+            while(new_id.length()<3) new_id += c;
         }
         
-        // step4 
-        if(sb.charAt(0)=='.'){
-            sb.delete(0,1);
-        } 
-        if(sb.length()>0 && sb.charAt(sb.length()-1)=='.'){
-            sb.delete(sb.length()-1, sb.length());
-        }
-        
-        // step5
-        if(sb.length()==0){
-            sb.append("a");
-        }
-        
-        // step6
-        if(sb.length()>15){
-            sb.delete(15, sb.length());
-        }
-        if(sb.length()>0 && sb.charAt(sb.length()-1)=='.'){
-            sb.delete(sb.length()-1, sb.length());
-        }
-        
-        // step7
-        if(sb.length()<3){
-            while(sb.length()<3){
-                sb.append(sb.charAt(sb.length()-1));
-            }
-        }
-        
-        answer = sb.toString();
+        answer = new_id;
         
         return answer;
     }
     
-    public static boolean check(char c){
-        if(Character.isAlphabetic(c) || Character.isDigit(c)){
-            return true;
+    public String sComma(String str){
+        StringBuilder sb = new StringBuilder(str);
+        while(sb.length()>0 && sb.charAt(0)=='.') sb.delete(0,1);
+        return sb.toString();
+    }
+    
+    public String eComma(String str){
+        StringBuilder sb = new StringBuilder(str);
+        while(sb.length()>0 && sb.charAt(sb.length()-1)=='.') sb.delete(sb.length()-1,sb.length());
+        return sb.toString();
+    }
+    
+    public String removeUnique(String str){
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i=0; i<str.length(); i++){
+            char c = str.charAt(i);
+            
+            if(!Character.isDigit(c) && !Character.isLetter(c) && c!='.' && c!='-' && c!='_') continue;
+            
+            sb.append(c);
         }
         
-        char[] arr = {'_', '-', '.'};
-        for(char a : arr){
-            if(c==a) return true;
-        }
+        return sb.toString();
+    }
+    
+    public String oneComma(String str){
+        StringBuilder sb = new StringBuilder();
+        boolean isComma = false;
         
-        return false;
+        for(int i=0; i<str.length(); i++){
+            char c = str.charAt(i);
+            
+            if(c=='.'){
+                if(!isComma){
+                    isComma = true;
+                    sb.append(c);
+                } 
+            } else {
+                isComma = false;
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 }

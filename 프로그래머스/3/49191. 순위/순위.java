@@ -1,47 +1,61 @@
 import java.util.*;
 
 class Solution {
+    List<List<Integer>> graph;
+    List<List<Integer>> reverse;
+    
     public int solution(int n, int[][] results) {
         int answer = 0;
 
-        List<List<Integer>> win = new ArrayList<>();
-        List<List<Integer>> lose = new ArrayList<>();
+        graph = new ArrayList<>();
+        reverse = new ArrayList<>();
         for(int i=0; i<=n; i++) {
-            win.add(new ArrayList<>());
-            lose.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
+            reverse.add(new ArrayList<>());
         }
         
         for(int[] r : results){
-            win.get(r[0]).add(r[1]);
-            lose.get(r[1]).add(r[0]);
+            graph.get(r[0]).add(r[1]);
+            reverse.get(r[1]).add(r[0]);
         }
         
         for(int i=1; i<=n; i++){
-            int wcnt = find(i, n, win);
-            int lcnt = find(i, n, lose);
-            
-            if(wcnt+lcnt==n-1) answer++;
+            if(canRank(i, n)){
+                answer++;
+            }
         }
         
         return answer;
     }
     
-    public int find(int node, int N, List<List<Integer>> graph){
-        int cnt=0;
+    public boolean canRank(int n, int N){
+        int lose = find(reverse, n, N);
+        int win = find(graph, n, N);
         
-        Queue<Integer> queue = new ArrayDeque<>();
+        if(lose+win+1==N){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public int find(List<List<Integer>> g, int start, int N){
+        int cnt = 0;
         boolean[] visited = new boolean[N+1];
-        queue.add(node);
-        visited[node] = true;
+        Queue<Integer> queue = new ArrayDeque<>();
+        
+        visited[start] = true;
+        queue.add(start);
         
         while(!queue.isEmpty()){
             int cur = queue.poll();
             
-            if(!visited[cur]) cnt++;
-            visited[cur] = true;
-            
-            for(int nxt : graph.get(cur)){
-                if(!visited[nxt]) queue.add(nxt);
+            for(int nxt : g.get(cur)){
+                if(!visited[nxt]){
+                    visited[nxt] = true;
+                    cnt++;
+                    queue.add(nxt);
+                }
             }
         }
         

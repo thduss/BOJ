@@ -5,15 +5,19 @@ class Solution {
     
     public int solution(int n, int[][] costs) {
         int answer = 0;
+        
+        Arrays.sort(costs, (a,b)->{
+            return a[2] - b[2];
+        });
+        
         parent = new int[n];
         for(int i=0; i<n; i++) parent[i] = i;
-        Arrays.sort(costs, (a,b) -> a[2] - b[2]);
         
         for(int[] c : costs){
-            if(find(c[0])!=find(c[1])){
-                union(c[0], c[1]);
-                answer += c[2];
-            }
+            if(find(c[0])==find(c[1])) continue;
+            
+            union(c[0], c[1]);
+            answer += c[2];
         }
         
         return answer;

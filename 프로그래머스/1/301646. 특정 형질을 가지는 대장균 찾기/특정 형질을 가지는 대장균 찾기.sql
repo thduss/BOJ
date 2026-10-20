@@ -1,5 +1,5 @@
-# 2번 형질 보유하지 않고 1,3번 형질 보유 개체수
+# 2 & (1 | 3)
 
 SELECT COUNT(*) AS 'COUNT'
 FROM ECOLI_DATA
-WHERE GENOTYPE & 2 = 0 AND GENOTYPE & 5 > 0;
+WHERE !(GENOTYPE & 2) AND (GENOTYPE & 1 OR GENOTYPE & 4)

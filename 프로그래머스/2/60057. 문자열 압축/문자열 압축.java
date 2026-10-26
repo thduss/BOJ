@@ -3,32 +3,32 @@ import java.util.*;
 class Solution {
     public int solution(String s) {
         int answer = s.length();
-
-        for(int i=1; i<=s.length(); i++){            
-            int len = compress(s, i);
-            answer = Math.min(answer, len);    
+        
+        int len = s.length();
+        
+        for(int i=1; i<len; i++){
+            int cnt = compare(s, i);
+            answer = Math.min(cnt, answer);
         }
         
         return answer;
     }
     
-    public int compress(String str, int cnt){
-        
+    public int compare(String str, int cnt){
         List<String> list = new ArrayList<>();
+        
         for(int i=0; i<str.length(); i+=cnt){
             int end = Math.min(i+cnt, str.length());
-            String word = str.substring(i, end);
-            list.add(word);
+            list.add(str.substring(i, end));
         }
         
         int idx=0;
-        String word = "";
-        int len = 0;
+        int len=0;
         while(idx<list.size()){
-            word = list.get(idx);
-            
+            String word = list.get(idx);
             int c = 0;
-            while(idx<list.size() && word.equals(list.get(idx))){
+            
+            while(idx<list.size() && list.get(idx).equals(word)){
                 c++;
                 idx++;
             }

@@ -26,7 +26,7 @@ class Solution {
     
     public void dfs(int type, int remain, int sum){
         if(sum>=answer) return;
-        if(type==k){
+        if(type==k) {
             answer = Math.min(answer, sum+wait[type][remain]);
             return;
         }

@@ -3,23 +3,24 @@ import java.util.*;
 class Solution {
     public String solution(int[] numbers) {
         String answer = "";
-
-        String[] strNumbers = new String[numbers.length];
-        for(int i=0; i<numbers.length; i++){
-            strNumbers[i] = Integer.toString(numbers[i]);
+        
+        List<String> list = new ArrayList<>();
+        for(int n : numbers){
+            list.add(Integer.toString(n));
         }
         
-        Arrays.sort(strNumbers, (a,b) -> (b+a).compareTo(a+b));
+        Collections.sort(list, (a,b) -> (b+a).compareTo(a+b));
         
-        
-        for(int i=0; i<numbers.length; i++){
-            answer += strNumbers[i];
+        StringBuilder sb = new StringBuilder();
+        for(String str : list){
+            sb.append(str);
         }
         
-        if(answer.length()>=2 && answer.charAt(0)=='0') {
-            answer = "0";
-        }
+        answer = sb.toString();
+        if(answer.charAt(0)=='0' && answer.length()>1) answer = "0";
         
         return answer;
     }
+    
+
 }

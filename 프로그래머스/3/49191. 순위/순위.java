@@ -1,15 +1,13 @@
 import java.util.*;
 
 class Solution {
-    List<List<Integer>> graph;
-    List<List<Integer>> reverse;
-    
     public int solution(int n, int[][] results) {
         int answer = 0;
 
-        graph = new ArrayList<>();
-        reverse = new ArrayList<>();
-        for(int i=0; i<=n; i++) {
+        List<List<Integer>> graph = new ArrayList<>();
+        List<List<Integer>> reverse = new ArrayList<>();
+        
+        for(int i=0; i<=n; i++){
             graph.add(new ArrayList<>());
             reverse.add(new ArrayList<>());
         }
@@ -20,40 +18,33 @@ class Solution {
         }
         
         for(int i=1; i<=n; i++){
-            if(canRank(i, n)){
+            int c1 = countNode(i, graph, n);
+            int c2 = countNode(i, reverse, n);
+            
+            if(c1+c2==n+1){
                 answer++;
             }
         }
-        
+            
         return answer;
     }
     
-    public boolean canRank(int n, int N){
-        int lose = find(reverse, n, N);
-        int win = find(graph, n, N);
-        
-        if(lose+win+1==N){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public int find(List<List<Integer>> g, int start, int N){
+    public int countNode(int start, List<List<Integer>> graph, int N){
         int cnt = 0;
-        boolean[] visited = new boolean[N+1];
-        Queue<Integer> queue = new ArrayDeque<>();
         
-        visited[start] = true;
+        Queue<Integer> queue = new ArrayDeque<>();
+        boolean[] visited = new boolean[N+1];
+        
         queue.add(start);
+        visited[start]=true;
         
         while(!queue.isEmpty()){
             int cur = queue.poll();
+            cnt++;
             
-            for(int nxt : g.get(cur)){
+            for(int nxt : graph.get(cur)){
                 if(!visited[nxt]){
                     visited[nxt] = true;
-                    cnt++;
                     queue.add(nxt);
                 }
             }

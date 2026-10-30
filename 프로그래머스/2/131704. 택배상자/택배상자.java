@@ -1,30 +1,27 @@
+// 1~n 순서대로 전달
+// 보조 컨테이너에 보관 (stack)
 import java.util.*;
 
 class Solution {
     public int solution(int[] order) {
         int answer = 0;
+
+        int belt=1;
+        Stack<Integer> keep = new Stack<>();
         
-        Stack<Integer> backBelt = new Stack<>();
-        for(int i=1; i<order[0]; i++) backBelt.add(i);
-        answer=1;
-        int beltIdx = order[0]+1;
-        
-        for(int i=1; i<order.length; i++){
-            if(order[i]>beltIdx){
-                for(int j=beltIdx; j<order[i]; j++) backBelt.add(j);
-                beltIdx = order[i]+1;
+        for(int box : order){
+            while(belt<box){
+                keep.add(belt++);
+            }    
+            
+            if(belt==box){
                 answer++;
-            } else if(order[i]<beltIdx){
-                if(backBelt.peek()==order[i]){
-                     backBelt.pop();
-                    answer++;
-                }
-                else if(backBelt.peek()!=order[i]){
-                    return answer;
-                }
-            } else if(beltIdx==order[i]){
-                beltIdx++;
+                belt++;
+            } else if(keep.peek()==box){
+                keep.pop();
                 answer++;
+            } else {
+                break;
             }
         }
         
